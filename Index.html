@@ -1,0 +1,116 @@
+<!DOCTYPE html><html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>LS Blessd Intro</title>
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: white;
+      font-family: 'Arial Black', sans-serif;
+    }
+    .stage {
+      position: relative;
+      text-align: center;
+    }
+    .letter {
+      font-size: 8rem;
+      font-weight: bold;
+      color: #00aaff;
+      text-shadow: 0 0 20px #00f, 0 0 40px #00f;
+      opacity: 0;
+      animation: appear 2s forwards;
+    }
+    .letter.s {
+      animation-delay: 2s;
+    }
+    .notes {
+      position: absolute;
+      font-size: 2rem;
+      animation: floatUp 3s infinite;
+      color: #00aaff;
+      text-shadow: 0 0 10px #00f;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-200px) scale(0.5); opacity: 0; }
+    }
+    @keyframes appear {
+      to { opacity: 1; }
+    }
+    .cross {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 20px;
+      height: 120px;
+      background: #00aaff;
+      box-shadow: 0 0 30px #00f;
+      transform: translate(-50%, -50%) scale(0);
+      animation: crossShow 2s forwards;
+      animation-delay: 5s;
+    }
+    .cross::before {
+      content: '';
+      position: absolute;
+      width: 120px;
+      height: 20px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #00aaff;
+      box-shadow: 0 0 30px #00f;
+    }
+    @keyframes crossShow {
+      to { transform: translate(-50%, -50%) scale(1); }
+    }
+    .bleesd {
+      position: absolute;
+      top: 60%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 3rem;
+      font-weight: bold;
+      color: #fff;
+      opacity: 0;
+      text-shadow: 0 0 15px #00aaff, 0 0 30px #00f;
+      animation: showText 2s forwards;
+      animation-delay: 7s;
+    }
+    @keyframes showText {
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <div class="letter l">L</div>
+    <div class="letter s">S</div>
+    <div class="cross"></div>
+    <div class="bleesd">BLEESD</div>
+  </div>  <audio autoplay loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+  </audio>  <script>
+    const stage = document.querySelector('.stage');
+    function launchNotes(letter) {
+      for (let i = 0; i < 8; i++) {
+        const note = document.createElement('div');
+        note.className = 'notes';
+        note.textContent = '♪';
+        note.style.left = (Math.random() * 200 - 100) + 'px';
+        note.style.top = '0px';
+        note.style.animationDuration = (2 + Math.random() * 2) + 's';
+        letter.appendChild(note);
+        setTimeout(() => note.remove(), 3000);
+      }
+    }
+
+    setTimeout(() => launchNotes(document.querySelector('.letter.l')), 1000);
+    setTimeout(() => launchNotes(document.querySelector('.letter.s')), 3000);
+  </script></body>
+</html>
