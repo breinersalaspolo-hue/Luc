@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Dedicatoria</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: black;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+    }
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    .corner {
+      position: absolute;
+      font-size: 50px;
+      color: white;
+      font-weight: bold;
+      z-index: 2;
+    }
+    .L {
+      top: 20px;
+      left: 20px;
+    }
+    .S {
+      top: 20px;
+      right: 20px;
+    }
+    .text {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      font-size: 30px;
+      font-weight: bold;
+      color: white;
+      opacity: 0;
+      transition: opacity 2s ease-in-out;
+      z-index: 2;
+    }
+  </style>
+</head>
+<body>
+  <div class="corner L">L</div>
+  <div class="corner S">S</div>
+  <div id="text1" class="text">Lucas el más lindo</div>
+  <div id="text2" class="text">: para que dedicarte una canción si al conocerte vi que eras todas</div>
+
+  <canvas id="canvas"></canvas>
+
+  <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    class Note {
+      constructor(x, y, targetX, targetY) {
+        this.x = x;
+        this.y = y;
+        this.targetX = targetX;
+        this.targetY = targetY;
+        this.size = 20;
+        this.speed = 0.02 + Math.random() * 0.02;
+        this.progress = 0;
+      }
+
+      update() {
+        this.progress += this.speed;
+        this.x += (this.targetX - this.x) * this.speed;
+        this.y += (this.targetY - this.y) * this.speed;
+      }
+
+      draw() {
+        ctx.fillStyle = "deepskyblue";
+        ctx.font = this.size + "px Arial";
+        ctx.fillText("🎵", this.x, this.y);
+      }
+    }
+
+    function createNotesForText(text) {
+      ctx.font = "40px Arial";
+      const metrics = ctx.measureText(text);
+      const startX = canvas.width / 2 - metrics.width / 2;
+      const startY = canvas.height / 2;
+
+      let notes = [];
+      for (let i = 0; i < text.length; i++) {
+        let charX = startX + i * 25;
+        let charY = startY;
+        notes.push(new Note(50, 50, charX, charY)); // desde arriba izq
+        notes.push(new Note(canvas.width - 50, 50, charX, charY)); // desde arriba der
+      }
+      return notes;
+    }
+
+    let notes = [];
+    let phase = 0;
+    let timer = 0;
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      notes.forEach(note => {
+        note.update();
+        note.draw();
+      });
+
+      if (phase === 0 && timer > 100) {
+        document.getElementById("text1").style.opacity = 1;
+        phase = 1;
+        timer = 0;
+      }
+      if (phase === 1 && timer > 200) {
+        document.getElementById("text1").style.opacity = 0;
+        document.getElementById("text2").style.opacity = 1;
+        notes = createNotesForText(": para que dedicarte una canción si al conocerte vi que eras todas");
+        phase = 2;
+        timer = 0;
+      }
+
+      timer++;
+      requestAnimationFrame(animate);
+    }
+
+    notes = createNotesForText("Lucas el más lindo");
+    animate();
+  </script>
+</body>
+</html>
